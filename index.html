@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Gözlerini kapat</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#f4eedf;--line:rgba(80,110,170,.22);--ink:#2b2a33;--muted:#5d5a66;--red:#d6293e;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#1e1b19;--line:rgba(150,170,210,.14);--ink:#f1e8d8;--muted:#b9b0a0;--red:#ff5468;color-scheme:dark}}
+:root[data-theme="dark"]{--paper:#1e1b19;--line:rgba(150,170,210,.14);--ink:#f1e8d8;--muted:#b9b0a0;--red:#ff5468;color-scheme:dark}
+html,body{height:100%;margin:0}
+body{background-color:var(--paper);background-image:repeating-linear-gradient(transparent 0 35px,var(--line) 35px 36px);color:var(--ink);font-family:"Caveat","Segoe Print","Bradley Hand",cursive;display:flex;align-items:center;justify-content:center;overflow:hidden}
+body::before{content:"";position:fixed;left:34px;top:0;bottom:0;width:2px;background:var(--red);opacity:.35}
+.card{width:min(84%,420px);text-align:center;position:relative;z-index:2}
+.emoji{font-size:76px;line-height:1.1}
+h1{font-size:46px;margin:6px 0 4px;font-weight:700;transform:rotate(-1.5deg)}
+p{font-size:32px;line-height:1.25;color:var(--muted);margin:8px 0 26px;min-height:40px;white-space:pre-line;font-weight:500}
+.btns{display:flex;flex-wrap:wrap;gap:16px;justify-content:center;align-items:center;min-height:60px}
+button{font-family:inherit;font-size:28px;font-weight:700;color:var(--ink);background:transparent;border:2.5px solid var(--ink);border-radius:255px 14px 225px 14px/14px 225px 14px 255px;padding:6px 26px;cursor:pointer}
+#yes{background:var(--red);border-color:var(--red);color:#fff}
+input{font:inherit;font-size:30px;padding:6px 10px;border:0;border-bottom:2.5px solid var(--ink);background:transparent;color:var(--ink);width:100%;box-sizing:border-box;text-align:center;outline:none;margin-bottom:12px}
+.tap{position:fixed;font-size:26px;color:var(--red);pointer-events:none;z-index:8;animation:tap .9s ease-out forwards}
+@keyframes tap{to{transform:translateY(-60px) scale(1.4);opacity:0}}
+@keyframes open{40%{transform:scale(1.3) rotate(-8deg)}100%{transform:scale(.2) rotate(12deg);opacity:0}}
+.rain{position:fixed;top:-30px;color:var(--red);font-size:30px;pointer-events:none;z-index:8;animation:rain 2.2s linear forwards}
+@keyframes rain{to{transform:translateY(112vh) rotate(200deg)}}
+#mute{position:fixed;top:12px;right:12px;z-index:7;font-size:22px;padding:2px 14px;display:none}
+.card.done .emoji,.card.done h1,.card.done .btns{display:none}
+#cats{display:none;position:fixed;left:50%;bottom:calc(14px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);width:min(78vw,320px);height:auto;z-index:2}
+.card.done #cats{display:block;animation:fadein 1.5s 3.5s both}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+.pulse{transform-box:fill-box;transform-origin:center;animation:pulse 1.5s ease-in-out infinite}
+@keyframes pulse{50%{transform:scale(1.08)}}
+.eye{transform-box:fill-box;transform-origin:center;animation:blink 4s infinite}
+@keyframes blink{0%,92%,100%{transform:scaleY(1)}96%{transform:scaleY(.1)}}
+.tail{transform-box:fill-box;transform-origin:left bottom;animation:sway 2s ease-in-out infinite alternate}
+@keyframes sway{to{transform:rotate(-12deg)}}
+.card.done p{color:#fff;font-size:44px;font-weight:700;margin:0;text-shadow:0 2px 10px rgba(0,0,0,.4)}
+</style>
+</head>
+<body>
+<div class="card" id="card">
+  <div class="emoji" id="emoji"></div>
+  <h1 id="title"></h1>
+  <p id="text"></p>
+  <div class="btns" id="btns"></div>
+  <svg id='cats' viewBox='0 0 300 130' xmlns='http://www.w3.org/2000/svg'>
+<defs>
+<filter id='wob'><feTurbulence type='fractalNoise' baseFrequency='0.04' numOctaves='2' seed='1' result='n'><animate attributeName='seed' values='1;2;3;4;5' dur='0.6s' repeatCount='indefinite' calcMode='discrete'/></feTurbulence><feDisplacementMap in='SourceGraphic' in2='n' scale='3'/></filter>
+<g id='cat' fill='none' stroke='var(--ink)' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'>
+<path class='tail' d='M108 118 C132 124 136 96 121 90'/>
+<path d='M40 122 C34 94 52 84 76 84 C102 84 116 96 110 122 Z' fill='var(--c)' fill-opacity='.5'/>
+<path d='M50 70 C45 48 58 40 76 40 C97 40 107 50 102 70 C99 86 54 87 50 70 Z' fill='var(--c)' fill-opacity='.5'/>
+<path d='M52 52 L49 27 L69 42'/><path d='M100 52 L105 29 L85 42'/>
+<path d='M62 64 q4 -5 8 0'/><path d='M83 64 q4 -5 8 0'/>
+<path d='M72 72 q2 4 4 0 q2 4 4 0'/>
+<path d='M52 72 L36 68 M52 78 L37 82 M102 72 L118 68 M102 78 L117 82' stroke-width='2'/>
+</g>
+</defs>
+<g filter='url(#wob)'>
+<use href='#cat' style='--c:#f2a65a'/>
+<path d='M70 46 l2 6 M77 44 l0 7 M84 46 l-2 6' fill='none' stroke='var(--ink)' stroke-width='2.6' stroke-linecap='round'/>
+<g transform='translate(300 0) scale(-1 1)'>
+<use href='#cat' style='--c:#9aa3b8'/>
+<path d='M66 96 l9 -6 M70 104 l11 -7 M76 112 l10 -6' fill='none' stroke='var(--ink)' stroke-width='2.4' stroke-linecap='round'/>
+</g>
+<g class='pulse'>
+<path d='M150 84 C120 62 122 32 148 45 C151 47 150 48 152 45 C178 31 181 62 150 84 Z' fill='var(--red)' fill-opacity='.35' stroke='var(--red)' stroke-width='3.4' stroke-linejoin='round'/>
+<path d='M151 80 C125 62 127 40 147 49' fill='none' stroke='var(--red)' stroke-width='2' stroke-linecap='round'/>
+</g>
+</g>
+</svg>
+</div>
+<button id="mute">ses ♪</button>
+<script>
+(function(){
+  var S={
+    env:{e:"💌",t:"Sana bir şey yazdım",p:"Açmak için dokun.",env:1},
+    a:{e:"",t:"Gözlerini kapat",p:"Birkaç saniye öyle kal.",b:[["Kapattım","b"]]},
+    b:{e:"",t:"Bir şey görüyor musun?",p:"Dürüst ol.",b:[["Evet","ne"],["Hayır","hayir"]]},
+    hayir:{e:"",t:"İşte.",p:"Ben de senden başkasını görmüyorum.",b:[["Devam","g"]]},
+    ne:{e:"",t:"Ne gördün?",p:"",input:1,b:[["Söyle","g"]]},
+    g:{e:"",t:"Bir şey daha var",p:"Yıldızlara dokun.",stars:1},
+    sal:{e:'',t:'Telefonu salla',p:'Hadi, biraz salla.',shake:1},
+    q:{e:"",t:"Son bir soru",p:"Sevgilim olur musun?",final:1}
+  };
+  var E=document.getElementById("emoji"),T=document.getElementById("title"),P=document.getElementById("text"),B=document.getElementById("btns"),M=document.getElementById("mute");
+  var msgs=["Hayır","Cidden mi?","Lütfen","Seni seviyorum","Bir daha düşün…"];
+  var ac,on=true,iv;
+  function startMusic(){
+    if(ac)return;
+    try{ac=new (window.AudioContext||window.webkitAudioContext)()}catch(e){return}
+    var ch=[[220,261.63,329.63],[174.61,220,261.63],[261.63,329.63,392],[196,246.94,293.66]],n=0;
+    function play(){if(!on)return;var t=ac.currentTime;
+      ch[n%4].forEach(function(f){var o=ac.createOscillator(),g=ac.createGain();o.type="sine";o.frequency.value=f;
+        g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.05,t+1.2);g.gain.linearRampToValueAtTime(0,t+4.2);
+        o.connect(g);g.connect(ac.destination);o.start(t);o.stop(t+4.3)});n++}
+    play();setInterval(play,4000);M.style.display="block";
+  }
+  M.onclick=function(){on=!on;M.textContent=on?"ses ♪":"ses yok";if(ac){if(on)ac.resume();else ac.suspend()}};
+  function heartForm(){
+    var cv=document.createElement("canvas"),dpr=window.devicePixelRatio||1;
+    cv.style.cssText="position:fixed;left:0;top:0;width:100%;height:100%;z-index:1;pointer-events:none";
+    cv.width=innerWidth*dpr;cv.height=innerHeight*dpr;document.body.appendChild(cv);
+    var c=cv.getContext("2d");c.scale(dpr,dpr);
+    var cx=innerWidth/2,cy=innerHeight/2-8,sc=Math.min(innerWidth,innerHeight)/36,ps=[],i;
+    for(i=0;i<800;i++){
+      var t=Math.random()*Math.PI*2,r=Math.sqrt(Math.random());
+      var hx=16*Math.pow(Math.sin(t),3),hy=-(13*Math.cos(t)-5*Math.cos(2*t)-2*Math.cos(3*t)-Math.cos(4*t));
+      ps.push({sx:Math.random()*innerWidth,sy:Math.random()*innerHeight,tx:cx+hx*sc*r,ty:cy+hy*sc*r,
+        d:Math.random()*1500,u:2500+Math.random()*1800,s:2+Math.random()*3,
+        c:"hsl("+(340+Math.random()*20)+","+(75+Math.random()*20)+"%,"+(42+Math.random()*18)+"%)"});
+    }
+    var t0=performance.now();
+    function frame(now){
+      var el=now-t0;c.clearRect(0,0,innerWidth,innerHeight);
+      var beat=el>5500?1+0.03*Math.sin((el-5500)/230):1;
+      ps.forEach(function(p){
+        var k=Math.min(1,Math.max(0,(el-p.d)/p.u));k=1-Math.pow(1-k,3);
+        var x=p.sx+(p.tx-p.sx)*k,y=p.sy+(p.ty-p.sy)*k;
+        x=cx+(x-cx)*beat;y=cy+(y-cy)*beat;
+        c.fillStyle=p.c;c.beginPath();c.arc(x,y,p.s,0,Math.PI*2);c.fill();
+      });
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+  function shake(){
+    var cnt=0,need=6,lx=0,ly=0,lz=0,lt=0,gone=false;
+    function done(){if(gone)return;gone=true;window.removeEventListener('devicemotion',h);go('q')}
+    function rain(){for(var i=0;i<10;i++){var r=document.createElement('div');r.className='rain';r.textContent='♥';r.style.left=Math.random()*100+'vw';r.style.animationDelay=Math.random()*.4+'s';document.body.appendChild(r);setTimeout((function(x){return function(){x.remove()}})(r),2800)}}
+    function h(e){var a=e.accelerationIncludingGravity;if(!a)return;
+      var d=Math.abs(a.x-lx)+Math.abs(a.y-ly)+Math.abs(a.z-lz);lx=a.x;ly=a.y;lz=a.z;var now=Date.now();
+      if(d>30&&now-lt>350){lt=now;cnt++;rain();if(navigator.vibrate)navigator.vibrate(60);P.textContent=cnt>=need?'Tamam, yeter!':'Biraz daha…';if(cnt>=need)setTimeout(done,700)}}
+    var b=document.createElement('button');b.textContent='Hazırım';
+    b.onclick=function(){
+      function start(){window.addEventListener('devicemotion',h);b.remove();P.textContent='Şimdi salla!'}
+      if(window.DeviceMotionEvent&&typeof DeviceMotionEvent.requestPermission==='function'){DeviceMotionEvent.requestPermission().then(function(r){if(r==='granted')start()}).catch(function(){})}else start();
+    };
+    B.appendChild(b);
+    var s2=document.createElement('button');s2.textContent='Sallayamıyorum';s2.style.cssText='font-size:22px;border-width:1.5px;opacity:.7';
+    s2.onclick=function(){rain();setTimeout(done,700)};
+    setTimeout(function(){if(!gone)B.appendChild(s2)},4000);
+  }
+  function stars(){
+    var ch=["SEN","İ ","SEV","İYO","RUM"],got=0,shown="";
+    ch.forEach(function(){
+      var b=document.createElement("button");b.textContent="✦";
+      b.style.cssText="border:0;border-radius:0;font-size:46px;color:#e0a800;padding:4px 12px;transform:translateY("+(Math.random()*30-15)+"px)";
+      b.onclick=function(){
+        b.remove();shown+=ch[got];got++;
+        P.textContent=shown;P.style.fontSize="48px";P.style.color="var(--red)";
+        if(got===ch.length){var d=document.createElement("button");d.textContent="Devam";d.onclick=function(){go('q')};B.innerHTML="";B.appendChild(d)}
+      };
+      B.appendChild(b);
+    });
+  }
+  function final(){
+    var tries=0;
+    var y=document.createElement("button");y.id="yes";y.textContent="Evet";
+    var n=document.createElement("button");n.id="no";n.textContent="Hayır";
+    function mv(){n.style.position="fixed";n.style.zIndex=3;
+      n.style.left=Math.max(10,Math.random()*(innerWidth-130))+"px";n.style.top=Math.max(10,Math.random()*(innerHeight-60))+"px"}
+    function grow(){var w=Math.min(innerWidth,130+tries*70),h=Math.min(innerHeight,56+tries*80);
+      y.style.cssText="position:fixed;z-index:4;left:50%;top:50%;transform:translate(-50%,-50%);width:"+w+"px;height:"+h+"px;font-size:"+Math.min(28+tries*5,70)+"px;border-radius:"+(tries>10?0:"255px 14px 225px 14px/14px 225px 14px 255px")}
+    function dodge(e){if(e)e.preventDefault();tries++;n.textContent=msgs[Math.min(tries,msgs.length-1)];mv();grow()}
+    ["mouseenter","touchstart","pointerdown","click"].forEach(function(ev){n.addEventListener(ev,dodge)});
+    y.onclick=function(){
+      E.textContent="";T.textContent="";P.textContent="Seni Seviyorum :)";P.style.fontSize="";P.style.color="";if(navigator.vibrate)navigator.vibrate([150,80,150]);
+      document.getElementById("card").classList.add("done");
+      B.innerHTML="";n.remove();heartForm();
+    };
+    B.appendChild(y);B.appendChild(n);
+  }
+  function go(k){
+    if(k!=="env")startMusic();
+    var s=S[k];E.textContent=s.e;E.style.animation="";T.textContent=s.t;P.textContent=s.p;P.style.fontSize="";P.style.color="";B.innerHTML="";
+    if(s.input){var inp=document.createElement("input");inp.placeholder="yaz bakalım…";B.appendChild(inp)}
+    if(s.final){final();return}
+    if(s.stars){stars();return}
+    if(s.shake){shake();return}
+    if(s.env){var eb=document.createElement("button");eb.textContent="Aç";
+      eb.onclick=function(){startMusic();E.style.animation="open .7s forwards";setTimeout(function(){go("a")},650)};B.appendChild(eb);return}
+    s.b.forEach(function(x){
+      var b=document.createElement("button");b.textContent=x[0];B.appendChild(b);
+      if(k==="b"&&x[0]==="Evet"){
+        var run=function(e){if(e)e.preventDefault();b.style.position="fixed";b.style.zIndex=3;
+          b.style.left=Math.max(10,Math.random()*(innerWidth-110))+"px";b.style.top=Math.max(10,Math.random()*(innerHeight-60))+"px"};
+        ["mouseenter","touchstart","pointerdown","click"].forEach(function(ev){b.addEventListener(ev,run)});
+      }else b.onclick=function(){go(x[1])};
+    });
+  }
+  go("env");
+  document.addEventListener("pointerdown",function(e){
+    var h=document.createElement("div");h.className="tap";h.textContent="♥";
+    h.style.left=(e.clientX-10)+"px";h.style.top=(e.clientY-10)+"px";
+    document.body.appendChild(h);setTimeout(function(){h.remove()},900);
+  });
+})();
+</script>
+</body>
+</html>
